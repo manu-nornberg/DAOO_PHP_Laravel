@@ -27,9 +27,4 @@ class IMC{
         }else
             return "\nNão é possivel classificar o IMC";
         } 
-    } 
-    
-
-
-
-?>
+    }
