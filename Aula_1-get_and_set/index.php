@@ -24,5 +24,3 @@ $pessoa1->imc = IMC::calcIMC($pessoa1);
 $paciente1->imc = IMC::calcIMC($paciente1);
 echo IMC::classifica($pessoa1);
 echo IMC::classifica($paciente1);
-
-?>

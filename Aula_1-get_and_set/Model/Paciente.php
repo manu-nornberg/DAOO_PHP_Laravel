@@ -8,5 +8,3 @@ class Paciente extends Pessoa{
     }
 }
 
-
-?>
