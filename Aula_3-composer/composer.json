@@ -1,0 +1,28 @@
+{
+    "name": "emanu/aula_3-composer",
+    "autoload": {
+        "psr-4": {
+            "Emanu\\Aula3Composer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Manu Nörnberg",
+            "email": "emanuelleporto10@gmail.com"
+        }
+    ],
+    "scripts":{
+        "start": "php -S localhost:8080 -t src/"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "vlucas/phpdotenv": "^5.5@dev"
+    },
+    "config": {
+        "process-timeout": 0
+    },
+    "require-dev": {
+        "psy/psysh": "@stable"
+    }
+
+}
