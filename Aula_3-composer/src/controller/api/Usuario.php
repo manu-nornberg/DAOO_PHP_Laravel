@@ -2,49 +2,49 @@
 
 namespace Emanu\Aula3Composer\controller\api;
 
-use Emanu\Aula3Composer\model\Produto as ProdutoModel;
-use Exception;
+use Emanu\Aula3Composer\model\Usuario as UsuarioModel;
 
-class Produto extends Controller{
+class Usuario extends Controller
+{
+    private UsuarioModel $model;
 
-	private ProdutoModel $model;
-
-	public function __construct()
+    public function __construct()
     {
         try {
-            $this->model = new ProdutoModel();
+            $this->model = new UsuarioModel();
         } catch (Exception $error) {
             $this->setHeader(500, "Erro ao conectar ao banco!");
             json_encode(["error" => $error->getMessage()]);
         }
     }
 
-	public function index()
+    public function index()
     {
         echo json_encode($this->model->read());
     }
 
-	public function show($id)
+    public function show($id)
     {
-        $produto = $this->model->read($id);
-        if ($produto) {
-            $response = ['produto' => $produto];
+        $usuario = $this->model->read($id);
+        if ($usuario) {
+            $response = ['usuario' => $usuario];
         } else {
-            $response = ['Erro' => "Produto não encontrado"];
+            $response = ['Erro' => "Usuario não encontrado"];
             header('HTTP/1.0 404 Not Found');
         }
         echo json_encode($response);
-     }
+    }
 
-	public function store()
+    public function store()
     {
         try {
-            $this->validateProdutoRequest();
+            $this->validateUsuarioRequest();
 
-            $this->model = new ProdutoModel(
+            $this->model = new UsuarioModel(
                 $_POST['nome'],
-                $_POST['descricao'],
-                $_POST['preco']
+                $_POST['cpf'],
+                $_POST['email'],
+                $_POST['status']
             );
 
             // error_log(print_r($this->model,TRUE));
@@ -52,11 +52,11 @@ class Produto extends Controller{
 
             if ($this->model->create()) {
                 echo json_encode([
-                    "success" => "Produto criado com sucesso!",
+                    "success" => "Usuario criado com sucesso!",
                     "data" => $this->model->getColumns()
                 ]);
             } else {
-                $msg = 'Erro ao cadastrar produto!';
+                $msg = 'Erro ao cadastrar!';
                 $this->setHeader(500, $msg);
                 throw new (Exception($msg));
             }
@@ -68,30 +68,27 @@ class Produto extends Controller{
         }
     }
 
-	public function update()
+    public function update()
     {
         try {
             if (!$this->validatePostRequest(['id']))
                 throw new Exception("Informe o ID do Produto!!");
 
-            $this->validateProdutoRequest();
+            $this->validateUsuarioRequest();
 
-            $this->model = new ProdutoModel(
+            $this->model = new UsuarioModel(
                 $_POST['nome'],
-                $_POST['descricao'],
-                $_POST['preco']
+                $_POST['cpf'],
+                $_POST['email']
             );
             $this->model->id = $_POST["id"];
 
-            // error_log(print_r($this->model,TRUE));
-            // throw new \Exception('LOG');
-
             if ($this->model->update())
                 echo json_encode([
-                    "success" => "Produto atualizado com sucesso!",
+                    "success" => "Usuario atualizado com sucesso!",
                     "data" => $this->model->getColumns()
                 ]);
-            else throw new \Exception("Erro ao atualizar produto!");
+            else throw new \Exception("Erro ao atualizar!");
         } catch (\Exception $error) {
             $this->setHeader(500, 'Erro interno do servidor!!!!');
             echo json_encode([
@@ -100,7 +97,7 @@ class Produto extends Controller{
         }
     }
 
-	public function remove()
+    public function remove()
     {
         try {
             if (!isset($_POST["id"])) {
@@ -109,10 +106,10 @@ class Produto extends Controller{
             }
             $id = $_POST["id"];
             if ($this->model->delete($id)) {
-                $response = ["message:" => "Produto id:$id removido com sucesso!"];
+                $response = ["message:" => "Usuario id:$id removido com sucesso!"];
             } else {
                 $this->setHeader(500, 'Internal Error.');
-                throw new Exception("Erro ao remover Produto!");
+                throw new Exception("Erro ao remover!");
             }
             echo json_encode($response);
         } catch (\Exception $error) {
@@ -122,12 +119,13 @@ class Produto extends Controller{
         }
     }
 
-	private function validateProdutoRequest()
+    private function validateUsuarioRequest()
     {
         $fields = [
             'nome',
-            'descricao',
-            'preco'
+            'cpf',
+            'email',
+            'status'
         ];
         if (!$this->validatePostRequest($fields))
             throw new \Exception('Erro: campos imcompletos!');

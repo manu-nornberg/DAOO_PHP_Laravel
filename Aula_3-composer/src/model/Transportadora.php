@@ -4,14 +4,13 @@ namespace Emanu\Aula3Composer\model;
 
 use Exception;
 
-class Produto extends Model implements iDAO
+class Transportadora extends Model implements iDAO
 {
-    private $id, $nome, $descricao, $preco;
+    private $id, $nome, $cidade;
 
     public function __construct(
         $nome = '',
-        $descricao = '',
-        $preco = ''
+        $cidade = ''
     )
     {
         try {
@@ -20,11 +19,10 @@ class Produto extends Model implements iDAO
             throw $error;
         }
 
-        $this->table = "produtos";
+        $this->table = "transportadora";
         $this->primary = "id";
         $this->nome = $nome;
-        $this->descricao = $descricao;
-        $this->preco = $preco;
+        $this->cidade = $cidade;
         $this->mapColumns($this);
     }
 
@@ -35,11 +33,9 @@ class Produto extends Model implements iDAO
                 return $this->selectById($id);
             }
             return $this->select();
-
         } catch (\Exception $error) {
             error_log("ERRO: " . print_r($error, TRUE));
             throw new Exception($error->getMessage());
-
         }
     }
 
@@ -48,26 +44,26 @@ class Produto extends Model implements iDAO
         try {
             $sql = "INSERT INTO $this->table ($this->columns)"
                 ."VALUES ($this->params)";
-
             error_log(print_r([
-                'colunas'=>$this->columns,
-                'param'=>$this->params,
-                'valores'=>$this->values,
-                'SQL'=>$sql
+                'colunas' => $this->columns,
+                'param' => $this->params,
+                'valores' => $this->values,
+                'SQL' => $sql
             ], true));
 
             $prepStmt = $this->conn->prepare($sql);
             $result = $prepStmt->execute($this->values);
 
-            if(!$result || $prepStmt->rowCount() != 1) {
-                throw new Exception("Erro ao inserir produto!!");
+            if (!$result || $prepStmt->rowCount() != 1) {
+                throw new Exception("Erro ao inserir!!");
+
             }
 
             $this->id = $this->conn->lastInsertId();
             $this->dumpQuery($prepStmt);
             return true;
 
-        }catch(Exception $error){
+        } catch (Exception $error) {
             throw new Exception($error->getMessage());
         }
     }
@@ -91,6 +87,15 @@ class Produto extends Model implements iDAO
         }
     }
 
+    public function delete($id)
+    {
+        $sql = "DELETE FROM $this->table WHERE id = :id";
+        $prepStmt = $this->conn->prepare($sql);
+        if ($prepStmt->execute([':id' => $id]))
+            return $prepStmt->rowCount() > 0;
+        else return false;
+    }
+
     public function __set($name, $value)
     {
         $this->$name = $value;
@@ -102,43 +107,14 @@ class Produto extends Model implements iDAO
         return $this->$name;
     }
 
-    public function filter($arrayFilter)
-    {
-        try {
-            if (!sizeof($arrayFilter))
-                throw new \Exception("Filtros vazios!");
-            $this->setFilters($arrayFilter);
-            $sql = "SELECT * FROM produtos WHERE $this->filters";
-            $prepStmt = $this->conn->prepare($sql);
-            if (!$prepStmt->execute($this->values))
-                return false;
-            $this->dumpQuery($prepStmt);
-            return $prepStmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $error) {
-            error_log("ERRO: " .print_r($error, TRUE));
-            if(isset($prepStmt))
-                $this->dumpQuery($prepStmt);
-            throw new \Exception($error->getMessage());
-        }
-    }
-
-    public function delete($id)
-    {
-        $sql = "DELETE FROM $this->table WHERE id = :id";
-        $prepStmt = $this->conn->prepare($sql);
-        if ($prepStmt->execute([':id' => $id]))
-            return $prepStmt->rowCount() > 0;
-        else return false;
-    }
-
     public function getColumns(): array
     {
         $columns = [
             "nome" => $this->nome,
-            "descricao" => $this->descricao,
-            "preco" => $this->preco
+            "cidade" => $this->cidade
         ];
         if($this->id) $columns['id']=$this->id;
         return $columns;
     }
+
 }

@@ -3,15 +3,15 @@
 namespace Emanu\Aula3Composer\model;
 
 use Exception;
-
-class Produto extends Model implements iDAO
+class Usuario extends Model implements iDAO
 {
-    private $id, $nome, $descricao, $preco;
+    private $id, $nome, $cpf, $email, $status;
 
     public function __construct(
         $nome = '',
-        $descricao = '',
-        $preco = ''
+        $cpf = '',
+        $email = '',
+        $status = ''
     )
     {
         try {
@@ -20,11 +20,12 @@ class Produto extends Model implements iDAO
             throw $error;
         }
 
-        $this->table = "produtos";
+        $this->table = "usuario";
         $this->primary = "id";
         $this->nome = $nome;
-        $this->descricao = $descricao;
-        $this->preco = $preco;
+        $this->cpf = $cpf;
+        $this->email = $email;
+        $this->status = $status;
         $this->mapColumns($this);
     }
 
@@ -60,7 +61,7 @@ class Produto extends Model implements iDAO
             $result = $prepStmt->execute($this->values);
 
             if(!$result || $prepStmt->rowCount() != 1) {
-                throw new Exception("Erro ao inserir produto!!");
+                throw new Exception("Erro ao inserir!!");
             }
 
             $this->id = $this->conn->lastInsertId();
@@ -91,6 +92,15 @@ class Produto extends Model implements iDAO
         }
     }
 
+    public function delete($id)
+    {
+        $sql = "DELETE FROM $this->table WHERE id = :id";
+        $prepStmt = $this->conn->prepare($sql);
+        if ($prepStmt->execute([':id' => $id]))
+            return $prepStmt->rowCount() > 0;
+        else return false;
+    }
+
     public function __set($name, $value)
     {
         $this->$name = $value;
@@ -102,43 +112,16 @@ class Produto extends Model implements iDAO
         return $this->$name;
     }
 
-    public function filter($arrayFilter)
-    {
-        try {
-            if (!sizeof($arrayFilter))
-                throw new \Exception("Filtros vazios!");
-            $this->setFilters($arrayFilter);
-            $sql = "SELECT * FROM produtos WHERE $this->filters";
-            $prepStmt = $this->conn->prepare($sql);
-            if (!$prepStmt->execute($this->values))
-                return false;
-            $this->dumpQuery($prepStmt);
-            return $prepStmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $error) {
-            error_log("ERRO: " .print_r($error, TRUE));
-            if(isset($prepStmt))
-                $this->dumpQuery($prepStmt);
-            throw new \Exception($error->getMessage());
-        }
-    }
-
-    public function delete($id)
-    {
-        $sql = "DELETE FROM $this->table WHERE id = :id";
-        $prepStmt = $this->conn->prepare($sql);
-        if ($prepStmt->execute([':id' => $id]))
-            return $prepStmt->rowCount() > 0;
-        else return false;
-    }
-
     public function getColumns(): array
     {
         $columns = [
             "nome" => $this->nome,
-            "descricao" => $this->descricao,
-            "preco" => $this->preco
+            "cpf" => $this->cpf,
+            "email" => $this->email,
+            "status" => $this->status
         ];
         if($this->id) $columns['id']=$this->id;
         return $columns;
+
     }
 }

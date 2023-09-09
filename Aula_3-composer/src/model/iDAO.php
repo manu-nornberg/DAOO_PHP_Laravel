@@ -6,7 +6,7 @@ interface iDAO
 {
     public function create();
     public function read($id = null);
-    public function update($id);
+    public function update();
     public function delete($id);
 
 
