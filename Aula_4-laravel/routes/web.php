@@ -22,9 +22,10 @@ Route::get('/', function () {
 Route::get('casa', [HomeController::class, 'index']);
 
 Route::get('produtos', [ProdutoController::class, 'index']);
+Route::get('produtos/create', [ProdutoController::class, 'create'])->name('produto/create');
+Route::post('produtos/store', [ProdutoController::class, 'store'])->name('produto/store');
 Route::get('produtos/{id}', [ProdutoController::class, 'show']);
 Route::get('produtos/{id}/update', [ProdutoController::class, 'update'])->name('produto-update');
 Route::post('produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produto-edit');
 Route::get('produtos/{id}/remove', [ProdutoController::class, 'remove'])->name('produto-remove');
-Route::post('produtos/{id}/delete', [ProdutoController::class, 'delete'])->name('produto-delete');
-Route::get('produtos/create', [ProdutoController::class, 'create'])->name('produto/create');
+Route::get('produtos/{id}/delete', [ProdutoController::class, 'delete'])->name('produto-delete');

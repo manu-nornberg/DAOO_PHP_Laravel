@@ -11,7 +11,7 @@
 
 <body class="antialiased">
     <h2>Produtos</h2>
-    @if ($produtos)
+    @if ($produtos->count() > 0)
         @foreach ($produtos as $produto)
             <table>
                 <tr>
@@ -37,7 +37,7 @@
     @else
         <p>Não achei nd ;-;</p>
     @endif
-    <a class="link" href="{{route('produtos/create')}}">Novo Produto</a>
+    <a class="link" href="{{ route('produto/create') }}">Novo Produto</a>
 </body>
 
 <style>

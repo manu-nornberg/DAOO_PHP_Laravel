@@ -13,22 +13,23 @@
     <h2>Produtos</h2>
 
         <h3 class="link">Inseir um produto</h3>
-        <form action="/produto/store" method="POST">
+        <form action="{{route('produto/store')}}" method="POST">
             @csrf
+            <input type="hidden" name="_token" value="{{csrf_token()}}"/>
             <table>
                 <tr>
                     <td>Nome:</td>
-                    <td><input type="text" name="nome" value="{{ $produto->nome }}" /></td>
+                    <td><input type="text" name="nome"  /></td>
                 </tr>
                 <tr>
                     <td>Descricao:</td>
                     <td>
-                        <textarea name="descricao" id="" cols="30" rows="10">{{ $produto->descricao }}</textarea>
+                        <textarea name="descricao" id="" cols="30" rows="10"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Preço:</td>
-                    <td><input type="number" name="preco" step=".01" value="{{ $produto->preco }}" /></td>
+                    <td><input type="number" name="preco" step=".01"  /></td>
                 </tr>
                 <tr align="center">
                     <td colspan="2">

@@ -18,7 +18,7 @@
         <table>
             <tr>
                 <td>
-                    <form action="{{ route('produto-delete',$produto->id) }}" method='post'>
+                    <form action="{{ route('produto-delete',$produto->id) }}" method='POST'>
                         @csrf
                         <input type="submit" name='confirmar' value="Remover" />
                     </form>

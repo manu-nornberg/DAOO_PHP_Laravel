@@ -22,12 +22,13 @@ class ProdutoController extends Controller
     public function index(): View
     {
         $model = new Produto();
-        return view('index', ['produtos' => $this->produto->all()]);
+        $collectionProdutos = Produto::all();
+        return view('produtos.index', ['produtos' => $this->produto->all()]);
     }
 
     public function show($id): View
     {
-        return view('show', ['produto' => Produto::find($id)]);
+        return view('produtos.show', ['produto' => Produto::find($id)]);
     }
 
     public function update($id): View
@@ -35,7 +36,7 @@ class ProdutoController extends Controller
         $produto = Produto::find($id);
         if (!$produto)
             dd("Produto não encontrado");
-        return view('update', [
+        return view('produtos.update', [
             'produto' => $produto
         ]);
     }
@@ -53,7 +54,7 @@ class ProdutoController extends Controller
         $produto = Produto::find($id);
         if (!$produto)
             dd("Produto não encontrado");
-        return view('remove', [
+        return view('produtos.remove', [
             'produto' => $produto
         ]);
     }
@@ -61,12 +62,19 @@ class ProdutoController extends Controller
 
     public function delete($id): RedirectResponse
     {
-        if(!Produto::destroy($id))
+        if(Produto::destroy($id))
         return redirect('./produtos');
     }
 
     public function create(): View
     {
-        return view('create');
+        return view('produtos.create');
+    }
+
+    public function store(Request $request)
+    {
+        $newProduto = $request->all();
+        if(Produto::create($newProduto))
+        return redirect('/produtos');
     }
 }
