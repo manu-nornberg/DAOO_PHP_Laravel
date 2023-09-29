@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(){
-        echo "oieeeee";
-        dd($this);
+    public function index(): View
+    {
+        return view('casa');
     }
 }

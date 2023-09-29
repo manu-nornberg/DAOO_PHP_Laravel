@@ -33,7 +33,7 @@ class ProdutoController extends Controller
 
     public function update($id): View
     {
-        $produto = Produto::find($id);
+        $produto = Produto::find($id);  
         if (!$produto)
             dd("Produto não encontrado");
         return view('produtos.update', [

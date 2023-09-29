@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\TransportadoraController;
+use App\Models\Usuario;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +19,11 @@ use App\Http\Controllers\ProdutoController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('casa', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
 
 Route::get('produtos', [ProdutoController::class, 'index']);
 Route::get('produtos/create', [ProdutoController::class, 'create'])->name('produto/create');
@@ -29,3 +33,23 @@ Route::get('produtos/{id}/update', [ProdutoController::class, 'update'])->name('
 Route::post('produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produto-edit');
 Route::get('produtos/{id}/remove', [ProdutoController::class, 'remove'])->name('produto-remove');
 Route::get('produtos/{id}/delete', [ProdutoController::class, 'delete'])->name('produto-delete');
+
+Route::get('usuarios', [UsuarioController::class, 'index']);
+Route::get('usuarios/create', [UsuarioController::class, 'create'])->name('usuario/create');
+Route::post('usuarios/store', [UsuarioController::class, 'store'])->name('usuario/store');
+Route::get('usuarios/{id}', [UsuarioController::class, 'show']);
+Route::get('usuarios/{id}/update', [UsuarioController::class, 'update'])->name('usuario-update');
+Route::post('usuarios/{id}/edit', [UsuarioController::class, 'edit'])->name('usuario-edit');
+Route::get('usuarios/{id}/remove', [UsuarioController::class, 'remove'])->name('usuario-remove');
+Route::get('usuarios/{id}/delete', [UsuarioController::class, 'delete'])->name('usuario-delete');
+
+Route::get('transportadoras', [TransportadoraController::class, 'index']);
+Route::get('transportadoras/create', [TransportadoraController::class, 'create'])->name('transportadora/create');
+Route::post('transportadoras/store', [TransportadoraController::class, 'store'])->name('transportadora/store');
+Route::get('transportadoras/{id}', [TransportadoraController::class, 'show']);
+Route::get('transportadoras/{id}/update', [TransportadoraController::class, 'update'])->name('transportadora-update');
+Route::post('transportadoras/{id}/edit', [TransportadoraController::class, 'edit'])->name('transportadora-edit');
+Route::get('transportadoras/{id}/remove', [TransportadoraController::class, 'remove'])->name('transportadora-remove');
+Route::get('transportadoras/{id}/delete', [TransportadoraController::class, 'delete'])->name('transportadora-delete');
+
+
