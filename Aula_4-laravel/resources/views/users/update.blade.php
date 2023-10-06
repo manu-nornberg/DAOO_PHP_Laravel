@@ -18,21 +18,28 @@
             <table>
                 <tr>
                     <td>Nome:</td>
-                    <td><input type="text" name="nome" value="{{ $usuario->nome }}" /></td>
+                    <td><input type="text" name="name" value="{{ $usuario->name }}" /></td>
                 </tr>
                 <tr>
                     <td>Cpf:</td>
                     <td><input type="text" name="cpf" value="{{ $usuario->cpf }}" /></td>
                 </tr>
                 <tr>
+                    <td>Senha:</td>
+                    <td><input type="text" name="password" value="{{ $usuario->password }}" /></td>
+                </tr>
+                <tr>
                     <td>Email:</td>
                     <td><input type="text" name="email" value="{{ $usuario->email }}" /></td>
                 </tr>
-
+                <tr>
+                    <td>Status:</td>
+                    <td><input type="text" name="status" value="{{ $usuario->status }}" /></td>
+                </tr>
                 <tr align="center">
                     <td colspan="2">
                         <input class="link" type="submit" value="Salvar" />
-                        <a href="/usuarios"><button form=cancel class="link">Cancelar</button></a>
+                        <a href="/users"><button form=cancel class="link">Cancelar</button></a>
                     </td>
                 </tr>
             </table>

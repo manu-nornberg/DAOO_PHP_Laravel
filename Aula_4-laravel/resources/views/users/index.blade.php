@@ -16,17 +16,21 @@
             <table>
                 <tr>
                     <td>ID: </td>
-                    <td><a class="link" href="usuarios/{{ $usuario->id }}">
+                    <td><a class="link" href="users/{{ $usuario->id }}">
                             {{ $usuario->id }}</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Nome: </td>
-                    <td>{{ $usuario->nome }}</td>
+                    <td>{{ $usuario->name }}</td>
                 </tr>
                 <tr>
                     <td>Cpf: </td>
                     <td>{{ $usuario->cpf }}</td>
+                </tr>
+                <tr>
+                    <td>Senha: </td>
+                    <td>{{ $usuario->password }}</td>
                 </tr>
                 <tr>
                     <td>Email: </td>
@@ -34,7 +38,7 @@
                 </tr>
                 <tr>
                     <td>Status: </td>
-                    <td>{{ $usuario->status }}</td>
+                    <td>{{ $usuario->status ? "Sim" : "Não"}}</td>
                 </tr>
             </table>
         @endforeach

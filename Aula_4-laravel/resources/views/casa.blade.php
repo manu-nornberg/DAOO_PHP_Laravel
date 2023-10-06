@@ -9,7 +9,7 @@
 
     <body class="antialiased">
         <a class="link" href="/produtos">Ver produtos</a>
-        <a class="link" href="/usuarios">Ver usuarios</a>
+        <a class="link" href="/users">Ver usuarios</a>
         <a class="link" href="/transportadoras">Ver transportadoras</a>
     </body>
 </html>

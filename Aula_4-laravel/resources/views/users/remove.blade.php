@@ -19,7 +19,7 @@
                     </form>
                 </td>
                 <td>
-                    <a href="/usuarios"><button>Cancelar</button></a>
+                    <a href="/users"><button>Cancelar</button></a>
                 </td>
             </tr>
         </table>

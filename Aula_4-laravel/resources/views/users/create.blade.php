@@ -21,20 +21,28 @@
             <table>
                 <tr>
                     <td>Nome:</td>
-                    <td><input type="text" name="nome"  /></td>
+                    <td><input type="text" name="name"  /></td>
                 </tr>
                 <tr>
                     <td>CPF:</td>
                     <td><input type="text" name="cpf"  /></td>
                 </tr>
                 <tr>
+                    <td>Senha:</td>
+                    <td><input type="text" name="password"  /></td>
+                </tr>
+                <tr>
                     <td>Email:</td>
                     <td><input type="text" name="email"  /></td>
+                </tr>
+                <tr>
+                    <td>Status:</td>
+                    <td><input type="text" name="status"  /></td>
                 </tr>
                 <tr align="center">
                     <td colspan="2">
                         <input class="link" type="submit" value="Salvar" />
-                        <a href="/usuarios"><button form=cancel class="link">Cancelar</button></a>
+                        <a href="/users"><button form=cancel class="link">Cancelar</button></a>
                     </td>
                 </tr>
             </table>

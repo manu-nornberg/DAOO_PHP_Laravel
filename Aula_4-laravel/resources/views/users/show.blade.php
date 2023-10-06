@@ -19,11 +19,15 @@
             </tr>
             <tr>
                 <td>Nome: </td>
-                <td>{{ $usuario->nome }}</td>
+                <td>{{ $usuario->name }}</td>
             </tr>
             <tr>
                 <td>Cpf: </td>
                 <td>{{ $usuario->cpf }}</td>
+            </tr>
+            <tr>
+                <td>Senha: </td>
+                <td>{{ $usuario->password }}</td>
             </tr>
             <tr>
                 <td>Email: </td>
@@ -31,12 +35,12 @@
             </tr>
             <tr>
                 <td>Status: </td>
-                <td>{{ $usuario->status }}</td>
+                <td>{{ $usuario->status ? "Sim" : "Nao"}}</td>
             </tr>
         </table>
     @endif
-    <a class="link" href="/usuario/{{ $usuario->id }}/update">Alterar</a>
-    <a class="link" href="/usuario/{{ $usuario->id }}/delete">Excluir</a>
+    <a class="link" href="/users/{{ $usuario->id }}/update">Alterar</a>
+    <a class="link" href="/users/{{ $usuario->id }}/delete">Excluir</a>
 </body>
 
 <style>

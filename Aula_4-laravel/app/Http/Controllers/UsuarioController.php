@@ -2,52 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-    //@var Usuario
+    //@var User
 
     private $usuario;
 
     public function __construct()
     {
-        $this->usuario = new Usuario();
+        $this->usuario = new User();
     }
 
     public function index(): View
     {
-        $model = new Usuario();
-        $collectionUsuarios = Usuario::all();
-        return view('usuarios.index', ['usuarios' => $this->usuario->all()]);
-    } 
+        $model = new User();
+        $collectionUsuarios = User::all();
+        return view('users.index', ['usuarios' => $this->usuario->all()]);
+    }
 
     public function create(): View
     {
-        return view('usuarios.create');
+        return view('users.create');
     }
 
     public function store(Request $request)
     {
         $newUsuario = $request->all();
-        if(Usuario::create($newUsuario))
-        return redirect('/usuarios');
+        if(User::create($newUsuario))
+        return redirect('/users');
     }
 
     public function show($id): View
     {
-        return view('usuarios.show', ['usuario' => Usuario::find($id)]);
+        return view('users.show', ['usuario' => User::find($id)]);
     }
 
     public function update($id): View
     {
-        $usuario = Usuario::find($id);
+        $usuario = User::find($id);
         if (!$usuario)
             dd("usuario não encontrado");
-        return view('usuarios.update', [
+        return view('users.update', [
             'usuario' => $usuario
         ]);
     }
@@ -56,16 +56,16 @@ class UsuarioController extends Controller
     {
         $updateUsuario = $request->all();
 
-        if (!Usuario::find($id)->update($updateUsuario));
-        return redirect('/usuarios');
+        if (!User::find($id)->update($updateUsuario));
+        return redirect('/users');
     }
 
     public function remove($id): View
     {
-        $usuario = Usuario::find($id);
+        $usuario = User::find($id);
         if (!$usuario)
             dd("usuario não encontrado");
-        return view('usuarios.remove', [
+        return view('users.remove', [
             'usuario' => $usuario
         ]);
     }
@@ -73,8 +73,8 @@ class UsuarioController extends Controller
 
     public function delete($id): RedirectResponse
     {
-        if(Usuario::destroy($id))
-        return redirect('./usuarios');
+        if(User::destroy($id))
+        return redirect('./users');
     }
 
 
