@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transportadoras', function (Blueprint $table) {
             $table->id();
+            $table->text("nome");
             $table->text("cidade");
             $table->text("telefone");
             $table->timestamps();

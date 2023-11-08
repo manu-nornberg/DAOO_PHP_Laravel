@@ -14,11 +14,16 @@ class Endereco extends Model
         'bairro',
         'cidade',
         'estado',
-        'cep'
+        'cep',
+        'user_id' 
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function pedidos(){
+        return $this->hasMany(Pedidos::class);
     }
 
 }

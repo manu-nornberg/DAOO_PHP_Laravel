@@ -3,6 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Pedido;
+use App\Models\Produto;
+use App\Models\Produto_pedido;
+use App\Models\Transportadora;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +18,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $transportadoras = Transportadora::factory(2)
+            ->create();
+
+        $produtos = Produto::factory(3)
+            ->create();
+
+        $users = User::factory(5)
+            ->hasEnderecos(2)
+            ->has($pedidos = Pedido::factory(2)
+                ->hasAttached($produtos->random(3),
+                ['quantidade' => 2]
+                )
+                ->state(function (array $attributes, User $user) use ($transportadoras) {
+                    return [
+                        'transportadora_id' => $transportadoras->random()->id,
+                    ];
+                })
+                )
+            ->create();
+
+
+
+
     }
 }

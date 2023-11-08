@@ -9,7 +9,12 @@ class Transportadora extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'nome',
         'cidade',
         'telefone'
     ];
+
+    public function pedidos(){
+        return $this->hasMany(Pedidos::class);
+    }
 }

@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('enderecos', function (Blueprint $table) {
+        Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")
             ->references('id')->on('users')
-            ->cascadeOnDelete(); 
-            $table->string('rua');
-            $table->string('numero');
-            $table->string('bairro');
-            $table->string('cidade');
-            $table->string('estado');
-            $table->string('cep');
+            ->cascadeOnDelete();
+            $table->foreignId("transportadora_id")
+            ->references('id')->on('transportadoras')
+            ->cascadOnDelete();
+            $table->string('quantidade');
+            $table->string('status');
+            $table->string('valor_total');
+            $table->string('data_pedido');
             $table->timestamps();
         });
     }
@@ -31,7 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('enderecos');
+        Schema::dropIfExists('pedidos');
     }
-
 };

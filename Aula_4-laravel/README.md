@@ -1,66 +1,58 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# E-commerce em Laravel
 
-## About Laravel
+Uma aplicação que simula um banco de dados em Laravel de um e-commerce.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Comandos para inicialização
 
-## Learning Laravel
+php artisan migrate:fresh
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+php artisan db:seed
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+php artisan tinker
+## Consultas no banco
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Abaixo as consultas das tabelas:
 
-## Laravel Sponsors
+### Usuarios
+Selecionar todos os os usuarios:
+* DB::Table("users")->get()
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Selecionar todos os usuarios por ordem alfabetica:
+* DB::Table('users')->select('name')->orderBy('name','ASC')->get(); 
 
-### Premium Partners
+Seleciona o nome dos usuarios e seus produtos:
+* DB::Table('pedidos')->join('users', 'user_id', '=', 'users.id')->join('pedido_produto', 'pedido_id', '=', 'pedidos.id')->join('produtos', 'produto_id', '=', 'produtos.id')->select('users.name', 'produtos.nome')->get()
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Endereços
+Selecionar todos os endereços dos usuarios:
+* DB::Table('enderecos')->join('users','user_id', '=', 'users.id')->get()
 
-## Contributing
+### Produtos
+Selecionar o nome dos produtos e o numero dos pedidos:
+* DB::Table('pedido_produto')->join('pedidos','pedido_id', '=', 'pedidos.id')->join('produtos','produto_id', '=', 'produtos.id')->select('produtos.nome', 'pedidos.id')->get() 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Seleciona os produtos com preços entre 5 e 10 reais:
+* DB::Table('produtos')->whereBetween('preco',[5,10])->orderBy('preco','desc')->get();
 
-## Code of Conduct
+Seleciona todos os produtos entre 0 à 20 reais e seus id de pedidos:
+* DB::Table('pedido_produto')->join('pedidos', 'pedido_id', '=', 'pedidos.id')->join('produtos', 'produto_id', '=', 'produtos.id')->whereBetween('preco',[0,20])->select('produtos.nome as produto','produtos.preco as preco','pedidos.id as numeroPedido')->get()
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Pedidos
+Selecionar todos os pedidos e o nome das transportadoras:
+* DB::Table("pedidos")->join("transportadoras","transportadora_id", "=", "transportadoras.id")->select('transportadoras.nome','pedidos.*')->get()
 
-## Security Vulnerabilities
+Selecionar os nomes dos produtos, e das transportadoras e o id do pedido:
+* DB::Table("pedidos")->join("transportadoras", "transportadora_id", "=", "transportadoras.id")->join('pedido_produto','pedido_id', "=", "pedidos.id")->join("produtos", "produto_id", "=", "produtos.id")->select('transportadoras.nome as transportadora','pedidos.id', "produtos.nome as produto")->get()
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Selecionar os endereços, nome dos usuarios e o id dos pedidos:
+* DB::Table('pedidos')->join('users', 'pedidos.user_id', '=', 'users.id')->join('enderecos', 'enderecos.user_id', '=', 'users.id')->select('users.name', 'enderecos.rua', 'pedidos.id')->get()
 
-## License
+### Transportadoras
+Selecionar todas as transportadoras:
+* DB::Table("transportadoras")->get()
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Selecionar o nome das transportadoras por ordem alfabetica: 
+* DB::Table('transportadoras')->select('nome')->orderBy('nome', 'ASC')->get()
