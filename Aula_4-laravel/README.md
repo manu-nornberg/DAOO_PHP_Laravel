@@ -18,41 +18,44 @@ Abaixo as consultas das tabelas:
 
 ### Usuarios
 Selecionar todos os os usuarios:
-* DB::Table("users")->get()
+* User::all()
 
-Selecionar todos os usuarios por ordem alfabetica:
-* DB::Table('users')->select('name')->orderBy('name','ASC')->get(); 
+Selecionar um usuario e seu endereco:
+* User::with("enderecos")->find(1)
 
-Seleciona o nome dos usuarios e seus produtos:
-* DB::Table('pedidos')->join('users', 'user_id', '=', 'users.id')->join('pedido_produto', 'pedido_id', '=', 'pedidos.id')->join('produtos', 'produto_id', '=', 'produtos.id')->select('users.name', 'produtos.nome')->get()
+Seleciona os usuarios e seus pedidos:
+* Pedido::join('users', 'users.id', '=', 'pedidos.user_id')->get()
 
 ### Endereços
 Selecionar todos os endereços dos usuarios:
-* DB::Table('enderecos')->join('users','user_id', '=', 'users.id')->get()
+* User::with('enderecos')->get()->pluck('enderecos')->flatten();
 
 ### Produtos
-Selecionar o nome dos produtos e o numero dos pedidos:
-* DB::Table('pedido_produto')->join('pedidos','pedido_id', '=', 'pedidos.id')->join('produtos','produto_id', '=', 'produtos.id')->select('produtos.nome', 'pedidos.id')->get() 
+Selecionar o nome dos produtos:
+* Produto::all()
 
-Seleciona os produtos com preços entre 5 e 10 reais:
-* DB::Table('produtos')->whereBetween('preco',[5,10])->orderBy('preco','desc')->get();
+Seleciona os produtos com preços entre 0 e 10 reais:
+* Produto::whereBetween('preco',[0,10])->orderBy('preco','desc')->get()->first()
 
 Seleciona todos os produtos entre 0 à 20 reais e seus id de pedidos:
-* DB::Table('pedido_produto')->join('pedidos', 'pedido_id', '=', 'pedidos.id')->join('produtos', 'produto_id', '=', 'produtos.id')->whereBetween('preco',[0,20])->select('produtos.nome as produto','produtos.preco as preco','pedidos.id as numeroPedido')->get()
+* Produto::whereBetween('preco', [0,20])->join('pedido_produto', 'produtos.id', '=', 'pedido_produto.produto_id')->join('pedidos', 'pedido_produto.pedido_id', '=', 'pedidos.id')->select('produtos.*','pedido_id as pedido')->get()
 
 ### Pedidos
-Selecionar todos os pedidos e o nome das transportadoras:
-* DB::Table("pedidos")->join("transportadoras","transportadora_id", "=", "transportadoras.id")->select('transportadoras.nome','pedidos.*')->get()
+Selecionar um pedido e o nome da transportadora:
+* Pedido::with('transportadora')->find(1)
 
-Selecionar os nomes dos produtos, e das transportadoras e o id do pedido:
-* DB::Table("pedidos")->join("transportadoras", "transportadora_id", "=", "transportadoras.id")->join('pedido_produto','pedido_id', "=", "pedidos.id")->join("produtos", "produto_id", "=", "produtos.id")->select('transportadoras.nome as transportadora','pedidos.id', "produtos.nome as produto")->get()
+Selecionar um pedido com usuario:
+* Pedido::find(1)->user
 
-Selecionar os endereços, nome dos usuarios e o id dos pedidos:
-* DB::Table('pedidos')->join('users', 'pedidos.user_id', '=', 'users.id')->join('enderecos', 'enderecos.user_id', '=', 'users.id')->select('users.name', 'enderecos.rua', 'pedidos.id')->get()
+Selecionar um pedido com transportadora por ordem de ID:
+* Pedido::with('transportadora')->orderBy('id')->find(1)
+
+Selecionar o usuario, o pedido ordenando pelo id do usuario e entre 1 e 5
+* Pedido::with('user')->orderBy('user_id')->whereBetween('user_id',[1,5])->find(1)
 
 ### Transportadoras
 Selecionar todas as transportadoras:
-* DB::Table("transportadoras")->get()
+* Transportadora::all()
 
 Selecionar o nome das transportadoras por ordem alfabetica: 
-* DB::Table('transportadoras')->select('nome')->orderBy('nome', 'ASC')->get()
+* Transportadora::orderBy('nome')->get();
