@@ -8,11 +8,17 @@ use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
+    private $produto;
+    public function __construct(Produto $produto)
+    {
+        $this->produto = $produto;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->produto->all();
         return response()->json(Produto::all());
     }
 
@@ -21,15 +27,12 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $novoProduto = $request->all();
-            $storedProduto = Produto::create($novoProduto);
-            $statushttp = 201;
-            return response()->json([
-                'message' => 'Produto criado com sucesso!',
-                'produto' => $storedProduto
-            ], $statushttp);
-        }catch(\Exception $e){
+        try {
+           return response()->json([
+            'Message'=>"Produto efetuado com sucesso",
+            "Produto"=>$this->produto->create($request->all())
+           ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -38,30 +41,23 @@ class ProdutoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Produto $produto)
     {
-        try{
-            return response()->json(Produto::findOrFail($id));
-        }catch(\Exception $e){
-            $statushttp = 500;
-            return response()->json(['message' => $e->getMessage()], $statushttp);
-        }
+       return $produto;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Produto $produto)
     {
-        try{
-            $produto = Produto::findOrFail($id);
+        try {
             $produto->update($request->all());
-            $statushttp = 200;
             return response()->json([
-                'message' => 'Produto atualizado com sucesso!',
-                'produto' => $produto
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"Produto atualizado com sucesso",
+                "Produto"=>$produto
+            ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -70,16 +66,16 @@ class ProdutoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(string $id)
+    public function destroy(Produto $produto)
     {
-        try{
-            $produto = Produto::findOrFail($id);
-            $produto->delete();
-            $statushttp = 200;
+        try {
+          if($produto->delete()){
             return response()->json([
-                'm' => "Produto deletado"
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"Produto deletado com sucesso",
+                "Produto"=>$produto
+            ]);
+          }
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }

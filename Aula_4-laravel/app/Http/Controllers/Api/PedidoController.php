@@ -8,11 +8,17 @@ use Illuminate\Http\Request;
 
 class PedidoController extends Controller
 {
+    private $pedido;
+    public function __construct(Pedido $pedido)
+    {
+        $this->pedido = $pedido;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->pedido->all();
         return response()->json(Pedido::all());
     }
 
@@ -21,15 +27,12 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $novoPedido = $request->all();
-            $storedPedido = Pedido::create($novoPedido);
-            $statushttp = 201;
-            return response()->json([
-                'message' => 'Pedido criado com sucesso!',
-                'pedido' => $storedPedido
-            ], $statushttp);
-        }catch(\Exception $e){
+        try {
+           return response()->json([
+            'Message'=>"Pedido efetuado com sucesso",
+            "Pedido"=>$this->pedido->create($request->all())
+           ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -38,30 +41,23 @@ class PedidoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Pedido $pedido)
     {
-        try{
-            return response()->json(Pedido::findOrFail($id));
-        }catch(\Exception $e){
-            $statushttp = 500;
-            return response()->json(['message' => $e->getMessage()], $statushttp);
-        }
+       return $pedido;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Pedido $pedido)
     {
-        try{
-            $pedido = Pedido::findOrFail($id);
+        try {
             $pedido->update($request->all());
-            $statushttp = 200;
             return response()->json([
-                'message' => 'pedido atualizado com sucesso!',
-                'pedido' => $pedido
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"Pedido atualizado com sucesso",
+                "Pedido"=>$pedido
+            ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -70,18 +66,22 @@ class PedidoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Pedido $pedido)
     {
-        try{
-            $pedido = Pedido::findOrFail($id);
-            $pedido->delete();
-            $statushttp = 200;
+        try {
+          if($pedido->delete()){
             return response()->json([
-                'm' => "pedido deletado"
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"Pedido deletado com sucesso",
+                "Pedido"=>$pedido
+            ]);
+          }
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
+    }
+
+    public function user(Pedido $pedido){
+        return response()->json($pedido->load('user'));
     }
 }

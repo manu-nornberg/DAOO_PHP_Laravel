@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pedido;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    private $user;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->user->all();
         return response()->json(User::all());
     }
 
@@ -21,15 +28,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $novoUser = $request->all();
-            $storedUser = User::create($novoUser);
-            $statushttp = 201;
-            return response()->json([
-                'message' => 'User criado com sucesso!',
-                'user' => $storedUser
-            ], $statushttp);
-        }catch(\Exception $e){
+        try {
+           return response()->json([
+            'Message'=>"User efetuado com sucesso",
+            "User"=>$this->user->create($request->all())
+           ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -38,30 +42,23 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        try{
-            return response()->json(User::findOrFail($id));
-        }catch(\Exception $e){
-            $statushttp = 500;
-            return response()->json(['message' => $e->getMessage()], $statushttp);
-        }
+       return $user;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        try{
-            $user = User::findOrFail($id);
+        try {
             $user->update($request->all());
-            $statushttp = 200;
             return response()->json([
-                'message' => 'User atualizado com sucesso!',
-                'user' => $user
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"User atualizado com sucesso",
+                "User"=>$user
+            ]);
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
@@ -70,18 +67,19 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        try{
-            $user = User::findOrFail($id);
-            $user->delete();
-            $statushttp = 200;
+        try {
+          if($user->delete()){
             return response()->json([
-                'm' => "user deletado"
-            ], $statushttp);
-        }catch(\Exception $e){
+                'Message'=>"User deletado com sucesso",
+                "User"=>$user
+            ]);
+          }
+        } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
     }
+
 }
