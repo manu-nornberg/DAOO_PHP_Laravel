@@ -21,7 +21,7 @@ return new class extends Migration
             $table->primary(['produto_id','pedido_id']);
             $table->string('quantidade');
             $table->timestamps();
-        });
+        }); 
     }
 
     /**

@@ -12,7 +12,7 @@ class Pedido extends Model
         'quantidade',
         'status',
         'valor_total',
-        'data_pedido',
+        'data_pedido', 
         'user_id',
         'transportadora_id',
         'produto_id'

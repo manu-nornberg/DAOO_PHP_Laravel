@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pedido;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -17,10 +18,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->user->all();
-        return response()->json(User::all());
+        $perPage = $request->query('per_page');
+        $usersPaginated = User::paginate($perPage);
+        $usersPaginated->appends([
+            'per_page' => $perPage
+        ]);
+        return response()->json($usersPaginated);
     }
 
     /**
@@ -28,15 +33,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $status = 200;
         try {
-           return response()->json([
-            'Message'=>"User efetuado com sucesso",
-            "User"=>$this->user->create($request->all())
-           ]);
-        } catch (\Exception $e) {
-            $statushttp = 500;
-            return response()->json(['message' => $e->getMessage()], $statushttp);
+            $newUser = $request->all();
+            $newUser['password'] = Hash::make($newUser['password']);
+
+            $createdUser = User::create($newUser);
+            $createdUser->markEmailAsVerified(); #Verificação de email fake
+
+            $response = [
+                'mensagem' => 'Usuário cadastrado com sucesso!!',
+                'user' => $createdUser
+            ];
+        } catch (\Exception $error) {
+            $status = 500;
+            $response = ['error' => $error->getMessage()];
         }
+        return response()->json($response, $status);
     }
 
     /**
@@ -44,7 +57,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-       return $user;
+        return $user;
     }
 
     /**
@@ -55,8 +68,8 @@ class UserController extends Controller
         try {
             $user->update($request->all());
             return response()->json([
-                'Message'=>"User atualizado com sucesso",
-                "User"=>$user
+                'Message' => "User atualizado com sucesso",
+                "User" => $user
             ]);
         } catch (\Exception $e) {
             $statushttp = 500;
@@ -70,16 +83,15 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-          if($user->delete()){
-            return response()->json([
-                'Message'=>"User deletado com sucesso",
-                "User"=>$user
-            ]);
-          }
+            if ($user->delete()) {
+                return response()->json([
+                    'Message' => "User deletado com sucesso",
+                    "User" => $user
+                ]);
+            }
         } catch (\Exception $e) {
             $statushttp = 500;
             return response()->json(['message' => $e->getMessage()], $statushttp);
         }
     }
-
 }
