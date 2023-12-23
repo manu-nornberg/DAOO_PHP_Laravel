@@ -35,10 +35,15 @@ Selecionar o nome dos produtos:
 * Produto::all()
 
 Seleciona os produtos com preços entre 0 e 10 reais:
-* Produto::whereBetween('preco',[0,10])->orderBy('preco','desc')->get()->first()
+<!-- * Produto::whereBetween('preco',[0,10])->orderBy('preco','desc')->get()->first() -->
+Produto::whereBetween('preco',[0,10])->orderBy('preco','desc')->get()
 
 Seleciona todos os produtos entre 0 à 20 reais e seus id de pedidos:
 * Produto::whereBetween('preco', [0,20])->join('pedido_produto', 'produtos.id', '=', 'pedido_produto.produto_id')->join('pedidos', 'pedido_produto.pedido_id', '=', 'pedidos.id')->select('produtos.*','pedido_id as pedido')->get()
+
+sugestão:
+
+Produto::whereBetween('preco', [0,20])->with(['pedidos'=>fn($q)=>$q->select('id')])->get()
 
 ### Pedidos
 Selecionar um pedido e o nome da transportadora:
