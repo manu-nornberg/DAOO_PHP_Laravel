@@ -48,8 +48,14 @@ Route::middleware(['auth:sanctum', 'role:manager'])->group(function () {
 // e aqui concatenar as abilidades admin e manager, como mostram os exemplos dos slides e docs
 // Será necessário relacionar a role do manager ao admin no seeder do user admin
 
-Route::middleware('auth:sanctum', 'role:client')->group(function () {
+// Route::middleware('auth:sanctum', 'role:client')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {//removido o middleware para verificar no controller
     Route::put('user/{user}', [UserController::class, 'update'])->name('user.update');
+    //Desta forma, qualquer usuário poderá atualizar o perfil de qualquer usuário. 
+    // A não ser que tenha proteção no controller, veja a correção do UserController
+
+    //faltou rota para visualizar user
+    Route::get('user/{user}',[UserController::class, 'show'])->name('user.show');
 });
 
 Route::post('login',[LoginController::class, 'login'])

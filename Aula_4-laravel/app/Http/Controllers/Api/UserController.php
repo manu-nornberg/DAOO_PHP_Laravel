@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Pedido;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -65,7 +66,16 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        try {
+        try {//ITEM 9
+            $authUser = $request->user();//user autenticado
+            // return $authUser;
+            if( $request->user()->id != $user->id   //não é o mesmo user
+                && ( // e ainda 
+                    !$authUser->admin // não é admin
+                    ||!$authUser->roles->contains('name', 'admin') // ou não possui o papel admin
+                ))
+                throw new Exception('Usurário não tem permissão!');
+
             $user->update($request->all());
             return response()->json([
                 'Message' => "User atualizado com sucesso",
