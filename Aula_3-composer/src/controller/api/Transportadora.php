@@ -38,7 +38,8 @@ class Transportadora extends Controller
             $this->validateTransportadoraRequest();
             $this->model = new TransportadoraModel(
                 $_POST['nome'],
-                $_POST['cidade']
+                $_POST['cidade'],
+                $_POST['telefone']
             );
 
             if ($this->model->create()) {
@@ -69,7 +70,8 @@ class Transportadora extends Controller
 
             $this->model = new TransportadoraModel(
                 $_POST['nome'],
-                $_POST['cidade']
+                $_POST['cidade'],
+                $_POST['telefone']
             );
             $this->model->id = $_POST["id"];
 

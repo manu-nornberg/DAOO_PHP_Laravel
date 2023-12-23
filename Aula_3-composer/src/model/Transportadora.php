@@ -10,7 +10,8 @@ class Transportadora extends Model implements iDAO
 
     public function __construct(
         $nome = '',
-        $cidade = ''
+        $cidade = '',
+        $telefone = ''
     )
     {
         try {
@@ -19,10 +20,11 @@ class Transportadora extends Model implements iDAO
             throw $error;
         }
 
-        $this->table = "transportadora";
+        $this->table = "transportadoras";//erro no nome da tabela na versão enviada do dump do banco
         $this->primary = "id";
         $this->nome = $nome;
         $this->cidade = $cidade;
+        $this->telefone = $telefone;
         $this->mapColumns($this);
     }
 
@@ -111,7 +113,8 @@ class Transportadora extends Model implements iDAO
     {
         $columns = [
             "nome" => $this->nome,
-            "cidade" => $this->cidade
+            "cidade" => $this->cidade,
+            "telefone" => $this->telefone
         ];
         if($this->id) $columns['id']=$this->id;
         return $columns;
