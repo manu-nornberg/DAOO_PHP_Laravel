@@ -67,10 +67,17 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'cpf' => '123456',
                 'status' => '0',
+                'admin'=>true,
                 'password' => Hash::make('123456')
             ])->each(function (User $user) {
-                $user->roles()->attach(Role::where('name', 'admin')->first());
-            });
+                // $user->roles()->attach(Role::where('name', 'admin')->first());
+                $user->roles()->attach( //aqui relacionamos o role manager ao user adm também
+                    Role::whereIn('name',['admin','manager'])// seleciona role admin e manager
+                        ->get() //executa
+                        ->pluck('id')//extrai apenas os ids da colecao
+                        ->all()); // all extrai o array puro da colecao
+            });//desta forma o admin também terá acesso as rotas do manager
+            //podendo agora cadastrar produtos
 
         User::factory(1)
         ->create([
